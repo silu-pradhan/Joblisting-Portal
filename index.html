@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareerGrid | Job Listing Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="CareerGrid home">
+          <span class="brand-mark">CG</span>
+          <span>CareerGrid</span>
+        </a>
+        <a class="post-job-link" href="#jobs">Browse Jobs</a>
+      </nav>
+
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">Internship Project</p>
+          <h1>Find the right role faster with smart job filters.</h1>
+          <p>
+            Search curated openings by title, location, category, and experience
+            level with a clean responsive interface built for every screen.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#jobs">Explore Jobs</a>
+            <a class="secondary-button" href="#filters">Use Filters</a>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Job search summary">
+          <div class="hero-panel-top">
+            <span>Live listings</span>
+            <strong id="heroTotalJobs">0</strong>
+          </div>
+          <div class="hero-stat-row">
+            <span>Remote roles</span>
+            <strong>6</strong>
+          </div>
+          <div class="hero-stat-row">
+            <span>Top category</span>
+            <strong>IT</strong>
+          </div>
+          <div class="hero-stat-row">
+            <span>Saved jobs</span>
+            <strong id="savedCountHero">0</strong>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="search-band" id="filters" aria-label="Job filters">
+        <div class="search-container">
+          <label class="search-field">
+            <span>Search by keyword</span>
+            <input
+              type="search"
+              id="keywordSearch"
+              placeholder="Frontend, analyst, designer..."
+              autocomplete="off"
+            />
+          </label>
+
+          <div class="filter-grid">
+            <label>
+              <span>Location</span>
+              <select id="locationFilter">
+                <option value="">All locations</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Category</span>
+              <select id="categoryFilter">
+                <option value="">All categories</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Experience</span>
+              <select id="experienceFilter">
+                <option value="">All levels</option>
+              </select>
+            </label>
+
+            <button class="reset-button" id="resetFilters" type="button">
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="jobs-section" id="jobs">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Open Positions</p>
+            <h2>Recommended jobs</h2>
+          </div>
+          <p id="resultCount" aria-live="polite">Showing 0 jobs</p>
+        </div>
+
+        <div class="jobs-layout">
+          <aside class="quick-summary" aria-label="Job listing summary">
+            <h3>Search Summary</h3>
+            <p>Use the filters to narrow openings instantly.</p>
+            <div class="summary-item">
+              <span>Total matches</span>
+              <strong id="matchCount">0</strong>
+            </div>
+            <div class="summary-item">
+              <span>Saved jobs</span>
+              <strong id="savedCount">0</strong>
+            </div>
+            <div class="summary-item">
+              <span>Current page</span>
+              <strong id="pageCount">1 / 1</strong>
+            </div>
+          </aside>
+
+          <div class="jobs-content">
+            <div class="job-grid" id="jobGrid" aria-live="polite"></div>
+            <div class="empty-state" id="emptyState" hidden>
+              <h3>No matching jobs found</h3>
+              <p>Try a different keyword or clear one of the filters.</p>
+            </div>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-backdrop" id="jobModal" hidden>
+      <article class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="closeModal" type="button" aria-label="Close details">
+          &times;
+        </button>
+        <p class="eyebrow" id="modalCompany"></p>
+        <h2 id="modalTitle"></h2>
+        <div class="modal-tags" id="modalTags"></div>
+        <p id="modalDescription"></p>
+        <div>
+          <h3>Responsibilities</h3>
+          <ul id="modalResponsibilities"></ul>
+        </div>
+        <button class="primary-button modal-apply" type="button">Apply Now</button>
+      </article>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
