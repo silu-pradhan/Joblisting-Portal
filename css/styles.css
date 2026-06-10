@@ -316,6 +316,36 @@ select:focus {
   color: var(--text);
 }
 
+.category-breakdown {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.category-breakdown h4 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.category-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fbfcfe;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+  padding: 9px 10px;
+}
+
+.category-chip strong {
+  color: var(--primary-strong);
+}
+
 .job-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -359,8 +389,8 @@ select:focus {
 }
 
 .save-button {
-  display: grid;
-  width: 42px;
+  display: inline-grid;
+  min-width: 68px;
   height: 42px;
   flex: 0 0 auto;
   place-items: center;
@@ -369,7 +399,9 @@ select:focus {
   background: #fff;
   cursor: pointer;
   color: var(--muted);
-  font-size: 1.25rem;
+  font-size: 0.84rem;
+  font-weight: 900;
+  padding: 0 12px;
 }
 
 .save-button.is-saved {
@@ -389,6 +421,13 @@ select:focus {
   font-weight: 700;
 }
 
+.job-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 .job-meta,
 .modal-tags {
   display: flex;
@@ -403,6 +442,11 @@ select:focus {
   font-size: 0.78rem;
   font-weight: 800;
   padding: 6px 10px;
+}
+
+.pill.is-featured {
+  background: #fff7dd;
+  color: #7a4f00;
 }
 
 .job-description {
