@@ -1,0 +1,149 @@
+.job-card {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  min-height: 330px;
+  overflow: hidden;
+  border: 1px solid #e0e8ee;
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+  animation: cardIn 420ms ease both;
+  transition: transform 190ms ease, box-shadow 190ms ease, border-color 190ms ease;
+}
+
+.job-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  opacity: 0.82;
+}
+
+.job-card:hover {
+  border-color: rgba(8, 127, 115, 0.35);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-5px);
+}
+
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.company-logo {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #dff6f2, #fef2d6);
+  color: var(--primary-strong);
+  font-weight: 900;
+  box-shadow: inset 0 0 0 1px rgba(8, 127, 115, 0.08);
+}
+
+.save-button {
+  display: inline-grid;
+  min-width: 72px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 900;
+  padding: 0 12px;
+  transition: background 170ms ease, color 170ms ease, border-color 170ms ease, transform 170ms ease;
+}
+
+.save-button:hover {
+  border-color: rgba(181, 71, 8, 0.26);
+  background: #fff8ed;
+  color: var(--danger);
+  transform: translateY(-1px);
+}
+
+.save-button.is-saved {
+  border-color: rgba(181, 71, 8, 0.28);
+  background: #fff4e5;
+  color: var(--danger);
+}
+
+.job-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.company-name {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.job-type-row,
+.job-meta,
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pill {
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: #344054;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 6px 10px;
+}
+
+.pill.is-featured {
+  background: #fff5d7;
+  color: #7a4f00;
+}
+
+.job-description {
+  color: var(--muted);
+  margin: 0;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.salary {
+  color: var(--primary-strong);
+  font-weight: 900;
+}
+
+.view-more-button {
+  border: 1px solid rgba(8, 127, 115, 0.42);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 900;
+  min-height: 42px;
+  padding: 10px 14px;
+  transition: background 170ms ease, color 170ms ease, transform 170ms ease;
+}
+
+.view-more-button:hover {
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-1px);
+}

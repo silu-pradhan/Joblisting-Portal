@@ -156,6 +156,80 @@
       </article>
     </div>
 
+    <!-- Apply Modal -->
+    <div class="modal-backdrop" id="applyModal" hidden>
+      <article class="modal apply-modal" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+        <button class="modal-close" id="closeApplyModal" type="button" aria-label="Close form">
+          &times;
+        </button>
+        <p class="eyebrow">Application Form</p>
+        <h2 id="applyModalTitle">Apply for Job</h2>
+        <form id="applyForm" novalidate>
+          <div class="form-group">
+            <label for="applyName">Full Name <span class="required">*</span></label>
+            <input type="text" id="applyName" placeholder="John Doe" required />
+            <span class="error-message" id="errorName">Please enter your full name.</span>
+          </div>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="applyEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="applyEmail" placeholder="john.doe@example.com" required />
+              <span class="error-message" id="errorEmail">Please enter a valid email address.</span>
+            </div>
+            <div class="form-group">
+              <label for="applyPhone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="applyPhone" placeholder="+1 (555) 000-0000" required />
+              <span class="error-message" id="errorPhone">Please enter your phone number.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="applyLink">Portfolio / LinkedIn URL</label>
+            <input type="url" id="applyLink" placeholder="https://linkedin.com/in/johndoe" />
+            <span class="error-message" id="errorLink">Please enter a valid URL.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="applyResume">Upload Resume (PDF, DOCX) <span class="required">*</span></label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="applyResume" accept=".pdf,.doc,.docx" required />
+              <div class="file-upload-content">
+                <span class="upload-icon">📂</span>
+                <span class="upload-text" id="resumeUploadText">Click to upload or drag & drop</span>
+                <span class="upload-hint" id="resumeUploadHint">PDF, DOC, DOCX up to 5MB</span>
+              </div>
+            </div>
+            <span class="error-message" id="errorResume">Please upload your resume.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="applyCover">Cover Letter / Message (Optional)</label>
+            <textarea id="applyCover" rows="4" placeholder="Briefly introduce yourself and why you're a great fit for this role..."></textarea>
+          </div>
+
+          <button class="primary-button form-submit" type="submit">Submit Application</button>
+        </form>
+      </article>
+    </div>
+
+    <!-- Posting / Success Modal -->
+    <div class="modal-backdrop" id="statusModal" hidden>
+      <article class="modal status-modal" role="dialog" aria-modal="true" aria-labelledby="statusModalTitle">
+        <div class="status-content posting" id="statusPosting">
+          <div class="loading-spinner"></div>
+          <h2 id="statusModalTitle">Job is posting...</h2>
+          <p>Please wait while we submit your application to the recruitment team.</p>
+        </div>
+        <div class="status-content success" id="statusSuccess" hidden>
+          <div class="success-icon">✓</div>
+          <h2>Application Submitted!</h2>
+          <p>Your job application has been successfully posted. We'll be in touch soon.</p>
+          <button class="primary-button" id="closeStatusModal" type="button">Close</button>
+        </div>
+      </article>
+    </div>
+
     <script type="module" src="js/app.js"></script>
   </body>
 </html>

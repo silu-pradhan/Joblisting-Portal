@@ -1,0 +1,97 @@
+@media (max-width: 900px) {
+  .site-header {
+    min-height: auto;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 52px;
+  }
+
+  .hero-panel {
+    max-width: 540px;
+  }
+
+  .filter-grid,
+  .jobs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 680px) {
+  .navbar,
+  .hero,
+  .search-container,
+  .jobs-section {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .navbar {
+    padding: 16px 0;
+  }
+
+  .post-job-link {
+    display: none;
+  }
+
+  .hero {
+    gap: 28px;
+    padding: 42px 0 88px;
+  }
+
+  .hero-copy p:not(.eyebrow) {
+    font-size: 1rem;
+  }
+
+  .hero-actions,
+  .card-actions,
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-actions a,
+  .card-actions button {
+    width: 100%;
+  }
+
+  .search-band {
+    margin-top: -48px;
+  }
+
+  .search-container {
+    padding: 16px;
+  }
+
+  .jobs-section {
+    padding-top: 54px;
+  }
+
+  .job-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-card {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .modal {
+    padding: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}

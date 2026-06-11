@@ -11,7 +11,8 @@ const state = {
   experience: "",
   page: 1,
   perPage: 6,
-  saved: loadSavedJobs()
+  saved: loadSavedJobs(),
+  currentJobId: null
 };
 
 const elements = {
@@ -38,7 +39,27 @@ const elements = {
   modalTitle: document.querySelector("#modalTitle"),
   modalTags: document.querySelector("#modalTags"),
   modalDescription: document.querySelector("#modalDescription"),
-  modalResponsibilities: document.querySelector("#modalResponsibilities")
+  modalResponsibilities: document.querySelector("#modalResponsibilities"),
+  
+  // New elements for job application flow
+  modalApply: document.querySelector(".modal-apply"),
+  applyModal: document.querySelector("#applyModal"),
+  closeApplyModal: document.querySelector("#closeApplyModal"),
+  applyForm: document.querySelector("#applyForm"),
+  applyName: document.querySelector("#applyName"),
+  applyEmail: document.querySelector("#applyEmail"),
+  applyPhone: document.querySelector("#applyPhone"),
+  applyLink: document.querySelector("#applyLink"),
+  applyResume: document.querySelector("#applyResume"),
+  resumeUploadText: document.querySelector("#resumeUploadText"),
+  resumeUploadHint: document.querySelector("#resumeUploadHint"),
+  applyCover: document.querySelector("#applyCover"),
+  applyModalTitle: document.querySelector("#applyModalTitle"),
+  
+  statusModal: document.querySelector("#statusModal"),
+  statusPosting: document.querySelector("#statusPosting"),
+  statusSuccess: document.querySelector("#statusSuccess"),
+  closeStatusModal: document.querySelector("#closeStatusModal")
 };
 
 const modal = createModalController(elements, jobs);
@@ -176,12 +197,173 @@ function bindJobCardEvents() {
     const saveButton = event.target.closest("[data-save-id]");
 
     if (viewButton) {
-      modal.open(Number(viewButton.dataset.jobId));
+      const jobId = Number(viewButton.dataset.jobId);
+      state.currentJobId = jobId;
+      modal.open(jobId);
     }
 
     if (saveButton) {
       toggleSaved(Number(saveButton.dataset.saveId));
     }
+  });
+}
+
+function validateForm() {
+  let isValid = true;
+
+  const setError = (inputEl, show) => {
+    const group = inputEl.closest(".form-group");
+    if (show) {
+      group.classList.add("has-error");
+      isValid = false;
+    } else {
+      group.classList.remove("has-error");
+    }
+  };
+
+  const nameVal = elements.applyName.value.trim();
+  setError(elements.applyName, nameVal.length === 0);
+
+  const emailVal = elements.applyEmail.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  setError(elements.applyEmail, !emailRegex.test(emailVal));
+
+  const phoneVal = elements.applyPhone.value.trim();
+  const phoneRegex = /^[\d\s()+-]{7,}$/;
+  setError(elements.applyPhone, !phoneRegex.test(phoneVal));
+
+  const linkVal = elements.applyLink.value.trim();
+  if (linkVal.length > 0) {
+    try {
+      new URL(linkVal);
+      setError(elements.applyLink, false);
+    } catch (_) {
+      setError(elements.applyLink, true);
+    }
+  } else {
+    setError(elements.applyLink, false);
+  }
+
+  const resumeFiles = elements.applyResume.files;
+  setError(elements.applyResume, resumeFiles.length === 0);
+
+  return isValid;
+}
+
+function closeApplyModal() {
+  elements.applyModal.hidden = true;
+  document.body.style.overflow = "";
+  document.querySelectorAll(".apply-modal .form-group").forEach((group) => {
+    group.classList.remove("has-error");
+  });
+  elements.applyForm.reset();
+  elements.resumeUploadText.textContent = "Click to upload or drag & drop";
+  elements.resumeUploadHint.textContent = "PDF, DOC, DOCX up to 5MB";
+}
+
+function closeStatusModal() {
+  elements.statusModal.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function bindApplyFormEvents() {
+  // Open Apply Form click from details modal
+  elements.modalApply.addEventListener("click", () => {
+    modal.close();
+    const job = jobs.find((item) => item.id === state.currentJobId);
+    if (!job) return;
+
+    elements.applyModalTitle.textContent = `Apply for ${job.title} at ${job.company}`;
+    elements.applyModal.hidden = false;
+    document.body.style.overflow = "hidden";
+    elements.closeApplyModal.focus();
+  });
+
+  // Clear errors on typing
+  const inputs = [elements.applyName, elements.applyEmail, elements.applyPhone, elements.applyLink];
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      input.closest(".form-group").classList.remove("has-error");
+    });
+  });
+
+  // Resume select handler
+  elements.applyResume.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    const group = elements.applyResume.closest(".form-group");
+    group.classList.remove("has-error");
+    
+    if (file) {
+      elements.resumeUploadText.textContent = `File selected: ${file.name}`;
+      elements.resumeUploadHint.textContent = `Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB - Ready to upload`;
+    } else {
+      elements.resumeUploadText.textContent = "Click to upload or drag & drop";
+      elements.resumeUploadHint.textContent = "PDF, DOC, DOCX up to 5MB";
+    }
+  });
+
+  // Drag & drop visuals
+  const uploadWrapper = elements.applyResume.closest(".file-upload-wrapper");
+  elements.applyResume.addEventListener("dragenter", () => {
+    uploadWrapper.classList.add("is-dragover");
+  });
+  elements.applyResume.addEventListener("dragleave", () => {
+    uploadWrapper.classList.remove("is-dragover");
+  });
+  elements.applyResume.addEventListener("drop", () => {
+    uploadWrapper.classList.remove("is-dragover");
+  });
+
+  // Close actions
+  elements.closeApplyModal.addEventListener("click", closeApplyModal);
+  elements.applyModal.addEventListener("click", (event) => {
+    if (event.target === elements.applyModal) {
+      closeApplyModal();
+    }
+  });
+
+  elements.closeStatusModal.addEventListener("click", closeStatusModal);
+  elements.statusModal.addEventListener("click", (event) => {
+    if (event.target === elements.statusModal && !elements.statusSuccess.hidden) {
+      closeStatusModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      if (!elements.applyModal.hidden) {
+        closeApplyModal();
+      }
+      if (!elements.statusModal.hidden && !elements.statusSuccess.hidden) {
+        closeStatusModal();
+      }
+    }
+  });
+
+  // Form submit handler
+  elements.applyForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    // Close application form modal
+    elements.applyModal.hidden = true;
+
+    // Show status posting modal
+    elements.statusPosting.hidden = false;
+    elements.statusSuccess.hidden = true;
+    elements.statusModal.hidden = false;
+
+    // Simulate posting job latency
+    setTimeout(() => {
+      elements.statusPosting.hidden = true;
+      elements.statusSuccess.hidden = false;
+      elements.applyForm.reset();
+      elements.resumeUploadText.textContent = "Click to upload or drag & drop";
+      elements.resumeUploadHint.textContent = "PDF, DOC, DOCX up to 5MB";
+    }, 2000);
   });
 }
 
@@ -192,6 +374,7 @@ function init() {
   renderCategoryBreakdown();
   bindFilterEvents();
   bindJobCardEvents();
+  bindApplyFormEvents();
   renderJobs();
 }
 
