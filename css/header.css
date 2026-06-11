@@ -63,6 +63,30 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-button {
+  background: transparent;
+  border: 1.5px solid transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 11px 18px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: all 0.25s ease;
+}
+
+.nav-button:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .post-job-link,
 .secondary-button {
   border: 1px solid rgba(255, 255, 255, 0.28);

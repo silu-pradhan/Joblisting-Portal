@@ -19,7 +19,10 @@
           <span class="brand-mark">CG</span>
           <span>CareerGrid</span>
         </a>
-        <a class="post-job-link" href="#jobs">Browse Jobs</a>
+        <div class="nav-links">
+          <button class="nav-button" id="btnAppliedHistory" type="button">My Applications</button>
+          <a class="post-job-link" href="#jobs">Browse Jobs</a>
+        </div>
       </nav>
 
       <section class="hero" id="top">
@@ -226,6 +229,21 @@
           <h2>Application Submitted!</h2>
           <p>Your job application has been successfully posted. We'll be in touch soon.</p>
           <button class="primary-button" id="closeStatusModal" type="button">Close</button>
+        </div>
+      </article>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-backdrop" id="historyModal" hidden>
+      <article class="modal history-modal" role="dialog" aria-modal="true" aria-labelledby="historyModalTitle">
+        <button class="modal-close" id="closeHistoryModal" type="button" aria-label="Close history">
+          &times;
+        </button>
+        <p class="eyebrow">Your Tracking</p>
+        <h2 id="historyModalTitle">Applied Job History</h2>
+        
+        <div class="history-container" id="historyContainer">
+          <!-- Filled dynamically in app.js -->
         </div>
       </article>
     </div>

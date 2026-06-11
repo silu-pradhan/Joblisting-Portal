@@ -2,7 +2,7 @@ import { createJobCard } from "./components/jobCard.js";
 import { createModalController } from "./components/modal.js";
 import { filterJobs, getUniqueValues, populateFilter } from "./components/filters.js";
 import { jobs } from "./data/jobs.js";
-import { loadSavedJobs, saveJobs } from "./utils/storage.js";
+import { loadSavedJobs, saveJobs, loadAppliedJobs, saveAppliedJobs } from "./utils/storage.js";
 
 const state = {
   keyword: "",
@@ -12,6 +12,7 @@ const state = {
   page: 1,
   perPage: 6,
   saved: loadSavedJobs(),
+  applied: loadAppliedJobs(),
   currentJobId: null
 };
 
@@ -59,7 +60,13 @@ const elements = {
   statusModal: document.querySelector("#statusModal"),
   statusPosting: document.querySelector("#statusPosting"),
   statusSuccess: document.querySelector("#statusSuccess"),
-  closeStatusModal: document.querySelector("#closeStatusModal")
+  closeStatusModal: document.querySelector("#closeStatusModal"),
+  
+  // Applied Job History
+  btnAppliedHistory: document.querySelector("#btnAppliedHistory"),
+  historyModal: document.querySelector("#historyModal"),
+  closeHistoryModal: document.querySelector("#closeHistoryModal"),
+  historyContainer: document.querySelector("#historyContainer")
 };
 
 const modal = createModalController(elements, jobs);
@@ -128,7 +135,7 @@ function renderJobs() {
   const visibleJobs = filtered.slice(start, start + state.perPage);
 
   elements.jobGrid.innerHTML = visibleJobs
-    .map((job) => createJobCard(job, state.saved.has(job.id)))
+    .map((job) => createJobCard(job, state.saved.has(job.id), state.applied.some((app) => app.jobId === job.id)))
     .join("");
   elements.emptyState.hidden = filtered.length !== 0;
   elements.jobGrid.hidden = filtered.length === 0;
@@ -337,6 +344,9 @@ function bindApplyFormEvents() {
       if (!elements.statusModal.hidden && !elements.statusSuccess.hidden) {
         closeStatusModal();
       }
+      if (!elements.historyModal.hidden) {
+        closeHistoryModal();
+      }
     }
   });
 
@@ -348,6 +358,32 @@ function bindApplyFormEvents() {
       return;
     }
 
+    const job = jobs.find((item) => item.id === state.currentJobId);
+    if (!job) return;
+
+    // Capture application metadata
+    const application = {
+      id: Date.now(),
+      jobId: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      appliedAt: new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }),
+      name: elements.applyName.value.trim(),
+      email: elements.applyEmail.value.trim(),
+      phone: elements.applyPhone.value.trim(),
+      link: elements.applyLink.value.trim(),
+      resumeName: elements.applyResume.files[0]?.name || "resume.pdf",
+      coverLetter: elements.applyCover.value.trim()
+    };
+
     // Close application form modal
     elements.applyModal.hidden = true;
 
@@ -358,12 +394,98 @@ function bindApplyFormEvents() {
 
     // Simulate posting job latency
     setTimeout(() => {
+      // Save application history
+      state.applied.unshift(application);
+      saveAppliedJobs(state.applied);
+      renderJobs(); // Redraw job cards with their "Applied" badges
+
       elements.statusPosting.hidden = true;
       elements.statusSuccess.hidden = false;
       elements.applyForm.reset();
       elements.resumeUploadText.textContent = "Click to upload or drag & drop";
       elements.resumeUploadHint.textContent = "PDF, DOC, DOCX up to 5MB";
     }, 2000);
+  });
+}
+
+function closeHistoryModal() {
+  elements.historyModal.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function renderAppliedHistory() {
+  elements.historyContainer.innerHTML = "";
+
+  if (state.applied.length === 0) {
+    elements.historyContainer.innerHTML = `
+      <div class="history-empty">
+        <span class="history-empty-icon">📁</span>
+        <h3>No applications yet</h3>
+        <p>Start applying for roles to see your history here.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const cards = state.applied.map((app) => {
+    return `
+      <article class="history-card">
+        <div class="history-card-header">
+          <div class="history-job-info">
+            <h3>${app.title}</h3>
+            <p>${app.company} &bull; ${app.location}</p>
+          </div>
+          <span class="history-date">Applied ${app.appliedAt}</span>
+        </div>
+        
+        <div class="history-details-grid">
+          <div class="history-detail-item">
+            <span class="label">Candidate Name</span>
+            <span class="value">${app.name}</span>
+          </div>
+          <div class="history-detail-item">
+            <span class="label">Contact Info</span>
+            <span class="value">${app.email}<br>${app.phone}</span>
+          </div>
+          <div class="history-detail-item">
+            <span class="label">Resume / CV</span>
+            <span class="value">📄 ${app.resumeName}</span>
+          </div>
+          ${app.link ? `
+          <div class="history-detail-item">
+            <span class="label">Portfolio / LinkedIn</span>
+            <a class="value" href="${app.link}" target="_blank" rel="noopener noreferrer">${app.link}</a>
+          </div>
+          ` : ""}
+        </div>
+        
+        ${app.coverLetter ? `
+        <div class="history-cover-letter">
+          <span class="label">Cover Letter Summary</span>
+          <p>${app.coverLetter}</p>
+        </div>
+        ` : ""}
+      </article>
+    `;
+  }).join("");
+
+  elements.historyContainer.innerHTML = cards;
+}
+
+function bindHistoryEvents() {
+  elements.btnAppliedHistory.addEventListener("click", () => {
+    renderAppliedHistory();
+    elements.historyModal.hidden = false;
+    document.body.style.overflow = "hidden";
+    elements.closeHistoryModal.focus();
+  });
+
+  elements.closeHistoryModal.addEventListener("click", closeHistoryModal);
+  
+  elements.historyModal.addEventListener("click", (event) => {
+    if (event.target === elements.historyModal) {
+      closeHistoryModal();
+    }
   });
 }
 
@@ -375,6 +497,7 @@ function init() {
   bindFilterEvents();
   bindJobCardEvents();
   bindApplyFormEvents();
+  bindHistoryEvents();
   renderJobs();
 }
 

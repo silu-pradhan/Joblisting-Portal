@@ -1,11 +1,14 @@
-export function createJobCard(job, isSaved) {
+export function createJobCard(job, isSaved, isApplied) {
   return `
     <article class="job-card">
       <div class="job-card-header">
         <div class="company-logo" aria-hidden="true">${job.company.slice(0, 2).toUpperCase()}</div>
-        <button class="save-button ${isSaved ? "is-saved" : ""}" type="button" data-save-id="${job.id}" aria-label="${isSaved ? "Remove saved job" : "Save job"}">
-          ${isSaved ? "Saved" : "Save"}
-        </button>
+        <div class="header-badges">
+          ${isApplied ? `<span class="pill is-applied">Applied</span>` : ""}
+          <button class="save-button ${isSaved ? "is-saved" : ""}" type="button" data-save-id="${job.id}" aria-label="${isSaved ? "Remove saved job" : "Save job"}">
+            ${isSaved ? "Saved" : "Save"}
+          </button>
+        </div>
       </div>
       <div>
         <h3>${job.title}</h3>
